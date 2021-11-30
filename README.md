@@ -1,21 +1,33 @@
 # Simple react todo application based on Ethereum blockchain
 
-## Setup project
+## Install dependencies
 
-1. Install dependencies
-	npm install
+```
+npm install
+```
 
-2. Run local ganache server
-	npm run ganache-dev-server
+## Run local ganache server
 
-3. Deploy todo list smart contract to development blockchain network
-	npm run truffle-migrate
+```
+npm run ganache-dev-server
+```
 
-4. Set up metamask
+## Deploy todo list smart contract to development blockchain network
+
+```
+npm run truffle-migrate
+```
+
+## Set up metamask
+
 Make sure you have installed [MetaMask](https://metamask.io/)
 
-5. Connect to application with one of the test account provided by ganache server
+## Connect to application with one of the test account provided by ganache server
+
 ![accounts provided by ganache server](https://i.ibb.co/qmpCCCC/ganache-accounts.png)
 
-6. Run react app
-	npm start
+## Run react app
+
+```
+npm start
+```
