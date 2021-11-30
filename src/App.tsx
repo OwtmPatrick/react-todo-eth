@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import Web3 from 'web3';
 import {Stack, IStackStyles, IStackTokens} from '@fluentui/react/lib/Stack';
+import {Label} from '@fluentui/react/lib/Label';
 import {DefaultPalette} from '@fluentui/react/lib/Styling';
 import TodoList from './build/contracts/TodoList.json';
 import Account from './components/account';
@@ -57,9 +58,13 @@ function App() {
 
 		const accounts = await web3.eth.getAccounts();
 		const account = accounts[0];
-		const balance = web3.utils.fromWei(await web3.eth.getBalance(account), 'ether');
-		setAccount(accounts[0]);
-		setBalance(balance);
+
+		if (account) {
+			const balance = web3.utils.fromWei(await web3.eth.getBalance(account), 'ether');
+
+			setAccount(account);
+			setBalance(balance);
+		}
 	};
 
 	const getContract = async () => {
@@ -101,21 +106,32 @@ function App() {
 
 	return (
 		<Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
-			<Stack.Item align="start">
-				<Account account={account} balance={balance} />
-			</Stack.Item>
-
-			<Stack.Item align="center" styles={addTodoStyles}>
-				<Stack tokens={centerStackTokens}>
+			{account ? (
+				<>
 					<Stack.Item align="start">
-						<AddTodo addTodo={addTodo} />
+						<Account account={account} balance={balance} />
 					</Stack.Item>
 
-					<Stack.Item align="start">
-						<List tasks={tasks} toggleTodo={toggleTodo} />
+					<Stack.Item align="center" styles={addTodoStyles}>
+						<Stack tokens={centerStackTokens}>
+							<Stack.Item align="start">
+								<AddTodo addTodo={addTodo} />
+							</Stack.Item>
+
+							<Stack.Item align="start">
+								<List tasks={tasks} toggleTodo={toggleTodo} />
+							</Stack.Item>
+						</Stack>
 					</Stack.Item>
-				</Stack>
-			</Stack.Item>
+				</>
+			) : (
+				<Stack.Item align="center">
+					<Label>
+						Please make sure that your metamask account is connected to this site and
+						has sufficient value of ETH to make transactions, then reload page
+					</Label>
+				</Stack.Item>
+			)}
 		</Stack>
 	);
 }
