@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import Web3 from 'web3';
 import {Stack, IStackStyles, IStackTokens} from '@fluentui/react/lib/Stack';
+import {Spinner, SpinnerSize} from '@fluentui/react/lib/Spinner';
 import {Label} from '@fluentui/react/lib/Label';
 import {DefaultPalette} from '@fluentui/react/lib/Styling';
 import TodoList from './build/contracts/TodoList.json';
@@ -43,11 +44,13 @@ function App() {
 	const [account, setAccount] = useState<string | null>(null);
 	const [balance, setBalance] = useState<number | string>(0);
 	const [tasks, setTasks] = useState<ITask[]>([]);
+	const [loading, setLoading] = useState<boolean>(true);
 
 	useEffect(() => {
 		const loadBlockchainData = async () => {
-			getAccount();
-			getTasks();
+			await getAccount();
+			await getTasks();
+			setLoading(false);
 		};
 
 		loadBlockchainData();
@@ -103,6 +106,14 @@ function App() {
 		await todoList.methods.toggleCompleted(id).send({from: account});
 		await getTasks();
 	};
+
+	if (loading) {
+		return (
+			<Stack styles={stackStyles} horizontalAlign="center" verticalAlign="center">
+				<Spinner size={SpinnerSize.medium} />
+			</Stack>
+		);
+	}
 
 	return (
 		<Stack styles={stackStyles} tokens={itemAlignmentsStackTokens}>
