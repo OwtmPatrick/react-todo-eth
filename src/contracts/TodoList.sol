@@ -11,7 +11,7 @@ contract TodoList {
 	mapping(uint => Task) public tasks;
 
 	constructor() public {
-		createTask("Make todolist blockchain app");
+		createTask("Create blockchain based todolist app");
 	}
 
 	event TaskCreated(
