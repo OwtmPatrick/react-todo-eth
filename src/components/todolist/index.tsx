@@ -9,17 +9,13 @@ interface ITask {
 
 interface ITodoList {
 	tasks: ITask[] | [];
+	toggleTodo: Function;
 }
 
-const stackTokens = {childrenGap: 16};
+const stackTokens = {childrenGap: 12};
 
-const TodoList: React.FC<ITodoList> = ({tasks}): JSX.Element => {
-	const onChange = (
-		ev?: React.FormEvent<HTMLElement | HTMLInputElement>,
-		isChecked?: boolean
-	) => {
-		console.log(`The option has been changed to ${isChecked}.`);
-	};
+const TodoList: React.FC<ITodoList> = ({tasks, toggleTodo}): JSX.Element => {
+	const onToggleTodo = (id: string): void => toggleTodo(id);
 
 	return (
 		<Stack tokens={stackTokens}>
@@ -29,7 +25,7 @@ const TodoList: React.FC<ITodoList> = ({tasks}): JSX.Element => {
 						key={id}
 						label={content}
 						checked={completed}
-						onChange={onChange}
+						onChange={() => onToggleTodo(id)}
 					/>
 				)
 			)}

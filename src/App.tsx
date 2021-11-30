@@ -8,6 +8,8 @@ import AddTodo from './components/add-todo';
 import List from './components/todolist';
 import './App.css';
 
+const LOCAL_PROVIDER_URL = 'http://localhost:8545';
+
 const stackStyles: IStackStyles = {
 	root: {
 		background: DefaultPalette.themeTertiary,
@@ -51,7 +53,7 @@ function App() {
 	}, []);
 
 	const getAccount = async () => {
-		const web3 = new Web3(Web3.givenProvider || 'http://localhost:8545');
+		const web3 = new Web3(Web3.givenProvider || LOCAL_PROVIDER_URL);
 
 		const accounts = await web3.eth.getAccounts();
 		const account = accounts[0];
@@ -61,7 +63,7 @@ function App() {
 	};
 
 	const getContract = async () => {
-		const web3 = new Web3(Web3.givenProvider || 'http://localhost:8545');
+		const web3 = new Web3(Web3.givenProvider || LOCAL_PROVIDER_URL);
 		const abi: any = TodoList.abi;
 		const lastNetworkIndex: number = Object.values(TodoList.networks).length - 1;
 		const address = Object.values(TodoList.networks)[lastNetworkIndex].address;
@@ -85,8 +87,15 @@ function App() {
 
 	const addTodo = async (task: any) => {
 		const todoList = await getContract();
-		
+
 		await todoList.methods.createTask(task).send({from: account});
+		await getTasks();
+	};
+
+	const toggleTodo = async (id: string) => {
+		const todoList = await getContract();
+
+		await todoList.methods.toggleCompleted(id).send({from: account});
 		await getTasks();
 	};
 
@@ -103,7 +112,7 @@ function App() {
 					</Stack.Item>
 
 					<Stack.Item align="start">
-						<List tasks={tasks} />
+						<List tasks={tasks} toggleTodo={toggleTodo} />
 					</Stack.Item>
 				</Stack>
 			</Stack.Item>
